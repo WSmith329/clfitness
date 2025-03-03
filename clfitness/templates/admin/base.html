@@ -1,0 +1,27 @@
+{% extends 'admin/base.html' %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+html[data-theme="light"], :root {
+    --primary: #a98467;
+    --secondary: #c1e1c1;
+    --accent: #d3c9bf;
+    --primary-fg: #fff;
+
+    --body-fg: #333;
+    --body-bg: #fff;
+    --body-quiet-color: #666;
+    --body-medium-color: #444;
+    --body-loud-color: #000;
+
+    --header-color: var(--primary-fg);
+    --header-branding-color: var(--primary-fg);
+    --header-bg: var(--primary);
+    --header-link-color: var(--primary-fg);
+
+    --breadcrumbs-fg: var(--primary);
+    --breadcrumbs-link-fg: var(--body-bg);
+    --breadcrumbs-bg: var(--accent);
+}
+</style>
+{% endblock %}

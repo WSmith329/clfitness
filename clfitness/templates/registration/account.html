@@ -1,0 +1,75 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <header class="w-full h-16 md:h-20 my-10">
+        <h1 class="text-3xl font-bold">{{ user.username }}</h1>
+        <sub class="text-xl text-primary font-semibold">Est. {{ user.date_joined.date }}</sub>
+    </header>
+    <main class="w-full grow flex flex-col md:grid grid-cols-4 gap-y-10 gap-x-7 lg:gap-x-10">
+        <section class="px-5 md:px-10 py-5 text-lg md:text-xl bg-neutral-100 dark:bg-neutral-950 border-solid border-2 dark:border-black
+        rounded-lg col-span-4 col-start-1 lg:col-span-2">
+            <h3 class="text-xl md:text-2xl font-bold">Personal Information:</h3>
+            <p>First Name: {{ user.first_name }}</p>
+            <p>Last Name: {{ user.last_name }}</p>
+            <br>
+            <p>Email: {{ user.email }}</p>
+            <p>Phone: {{ user.client.phone_number }}</p>
+        </section>
+
+        <section class="px-5 md:px-10 py-5 text-xl bg-neutral-100 dark:bg-neutral-950 border-solid border-2 dark:border-black
+         rounded-lg col-span-4 col-start-1 lg:col-span-2 lg:col-start-3">
+            <h3 class="text-xl md:text-2xl font-bold">Aims:</h3>
+            <ol class="list-disc ml-5">
+                {% for aim in user.client.aims %}
+                    <li>{{ aim }}</li>
+                {% empty %}
+                    <p>No aims set yet.</p>
+                {% endfor %}
+            </ol>
+        </section>
+
+        <section class="px-5 md:px-10 py-5 bg-neutral-100 dark:bg-neutral-950 border-solid border-2 dark:border-black
+         rounded-lg col-span-4 col-start-1">
+            <div class="flex justify-between">
+                <h3 class="text-xl md:text-2xl font-bold">Recordings:</h3>
+                <a href="{% url 'measurement_recording' %}" class="text-white text-xs lg:text-sm font-bold rounded p-3
+                bg-green-700 cursor-pointer font-sans hover:bg-green-600 focus:ring focus:ring-green-600
+                focus:ring-opacity-25">
+                    Submit recording
+                </a>
+            </div>
+            <div class="flex flex-wrap gap-x-10 gap-y-5 items-center font-sans text-sm">
+                {% for recording in user.client.measurementrecording_set.all %}
+                    <div>
+                        <h4 class="font-bold">{{ recording.recorded }}</h4>
+                        <p>Weight: {{ recording.weight }}kg</p>
+                        <p>Height: {{ recording.height }}m</p>
+                        <p>Body Fat: {{ recording.body_fat }}</p>
+                        <p>BMI: {{ recording.bmi }}</p>
+                    </div>
+                {% if not forloop.last %}
+                    <div class="h-24 border-solid border-2 border-gray-500"></div>
+                {% endif %}
+                {% empty %}
+                    <p>No measurements recorded yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="md:mb-0 col-span-4 flex gap-x-5 justify-end items-center">
+            <a href="{% url 'password_change' %}" class="text-white text-xs lg:text-base rounded p-3 bg-red-700 hover:bg-red-600
+              focus:ring focus:ring-red-600 focus:ring-opacity-25">
+                <span class="font-bold font-sans">Change password</span>
+            </a>
+
+            <form id="logout-form" method="post" action="{% url 'logout' %}" class="mb-0">
+              {% csrf_token %}
+              <button type="submit" class="text-white text-xs lg:text-base rounded p-3 bg-red-700 hover:bg-red-600
+              focus:ring focus:ring-red-600 focus:ring-opacity-25">
+                  <span class="font-bold font-sans">Sign out&nbsp;</span>
+                  <i class="fa-solid fa-right-from-bracket"></i>
+              </button>
+            </form>
+        </section>
+    </main>
+{% endblock content %}

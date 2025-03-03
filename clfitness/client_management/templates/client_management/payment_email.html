@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Invoice Template</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        div {
+            padding-bottom: 1pt;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <p>Invoice: {{ invoice }}</p>
+        <p>Due on {{ due_date }}</p>
+    </div>
+
+    <div>
+        <p>Hi {{ client_name }},</p>
+    </div>
+
+    <div>
+        <p>Please see attached the invoice {{ invoice }} for {{ services }}. The invoice is due by {{ due_date }}.</p>
+    </div>
+
+    <div>
+        <p>Bank details provided on attached document.</p>
+        <p>PayPal is available on request.</p>
+    </div>
+
+    <div>
+        <p>Please don't hesitate to get in touch if you have any questions or need clarifications.</p>
+    </div>
+
+    <p>Best regards,</p>
+    <p>Chloe</p>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <section class="flex flex-col items-center justify-center my-10 gap-y-10">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% for session_exercise in session.sessionexercise_set.all %}
+                    <div class="sm:w-2/5 sm:min-w-96 min-w-0 w-full rounded overflow-hidden shadow-lg font-sans dark:bg-neutral-800">
+                        <div class="max-h-64 overflow-hidden">
+                            <img class="w-full"
+                                 src="{{ session_exercise.workout_exercise.exercise.thumbnail.image_file.url }}"
+                                 alt="{{ session_exercise.workout_exercise.exercise.thumbnail.name }}">
+                        </div>
+                        <div class="px-6 py-4 flex flex-col gap-y-5">
+                            <div>
+                                <h2 class="font-bold text-2xl mb-2">
+                                    {{ session_exercise.workout_exercise.exercise.name }}
+                                </h2>
+                                <div class="flex gap-y-2 mb-2">
+                                    {% for category in session_exercise.workout_exercise.exercise.categories.all  %}
+                                        <p class="bg-primary text-white px-2 py-1 rounded-full text-xs">
+                                            {{ category }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                                <p>{{ session_exercise.workout_exercise.description }}</p>
+                            </div>
+                            <hr>
+                            <div class="grid grid-cols-4 justify-items-center items-center gap-y-3">
+                                <div class="font-bold text-primary underline">
+                                    Set
+                                </div>
+                                <div class="font-bold text-primary underline">
+                                    Aim
+                                </div>
+                                <div class="font-bold text-primary underline">
+                                    Completed
+                                </div>
+                                <div class="font-bold text-primary underline">
+                                    Weight
+                                </div>
+                                {% for set in session_exercise.set_recordings %}
+                                    <div class="font-bold text-sm">
+                                        <p>{{ set.order }}</p>
+                                    </div>
+                                    <div class="text-sm">
+                                        {% if set.aim %}
+                                            <p>{{ set.aim }}</p>
+                                        {% else %}
+                                            <p>Until Failure</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-sm">
+                                        <p>{{ set.completed }}</p>
+                                    </div>
+                                    <div class="text-sm">
+                                        <p>{{ set.weight }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Sorry, no exercises have been assigned to this workout.</p>
+                {% endfor %}
+    </section>
+{% endblock content %}

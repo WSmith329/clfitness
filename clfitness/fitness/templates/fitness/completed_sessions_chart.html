@@ -1,0 +1,54 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <div class="my-10">
+    <table>
+    <tr>
+        <th>Week</th>
+        <th>Number of Sessions</th>
+    </tr>
+    {% for week in labels %}
+        <tr>
+            <td>{{ week }}</td>
+            <td>{{ data }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <div>
+        <canvas id="myChart" aria-label="Session per Week Chart" role="img">
+            <p>Chart failed to load.</p>
+        </canvas>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: {{ labels|safe }},
+              datasets: [{
+                label: 'Session per Week',
+                data: {{ data }},
+                borderWidth: 2,
+                borderColor: '#bea28d',
+                backgroundColor: '#a98467'
+              }]
+            },
+            options: {
+                scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                      precision: 0
+                    }
+                }
+                }
+            }
+        });
+    </script>
+{% endblock content %}

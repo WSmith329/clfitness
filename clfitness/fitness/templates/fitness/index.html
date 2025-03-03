@@ -1,0 +1,78 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <main class="grid grid-cols-4 gap-5 my-10 cursor-default">
+        <section class="col-start-1 col-span-4 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-5">
+            {% for plan in plans %}
+                {% for workout_assignment in plan.workoutassignment_set.all %}
+                    <a href="{% url 'workout' workout_assignment.workout.slug %}"
+                       class="w-full rounded overflow-hidden shadow-lg font-sans cursor-pointer dark:bg-neutral-800
+                                hover:brightness-90 focus:ring-4 focus:ring-primary focus:ring-opacity-25 duration-200">
+                        <div class="max-h-64 overflow-hidden">
+                            <img class="w-full"
+                                 src="{{ workout_assignment.workout.thumbnail.image_file.url }}"
+                                 alt="{{ workout_assignment.workout.thumbnail.name }}">
+                        </div>
+                        <div class="px-6 py-4 flex flex-col gap-y-5">
+                            <div>
+                                <h2 class="font-bold text-2xl mb-2">{{ workout_assignment.workout }}</h2>
+                                <p class="text-neutral-500">{{ workout_assignment.workout.description }}</p>
+                            </div>
+                            <div class="flex flex-nowrap justify-between text-white font-bold">
+                                <div class="col-auto bg-primary w-16 h-16 rounded
+                                flex flex-col justify-center items-center gap-y-1">
+                                    <i class="fa-solid fa-stopwatch"></i>
+                                    <p class="text-xs">{{ workout_assignment.workout.duration }}</p>
+                                </div>
+                                <div class="col-auto bg-primary w-16 h-16 rounded
+                                flex flex-col justify-center items-center gap-y-1">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                    <p class="text-xs">{{ workout_assignment.workout.get_difficulty_display }}</p>
+                                </div>
+                                <div class="col-auto bg-primary w-16 h-16 rounded
+                                flex flex-col justify-center items-center gap-y-1">
+                                    <i class="fa-solid fa-bullseye"></i>
+                                    <p class="text-xs">{{ workout_assignment.workout.categories.first }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex flex-col gap-y-3">
+                                {% for workout_exercise in workout_assignment.workout.workoutexercise_set.all %}
+                                    <div class="flex text-sm gap-x-5 items-center">
+                                        <div class="h-16 w-16 rounded bg-cover bg-center"
+                                             style="background-image:
+                                                     url({{ workout_exercise.exercise.thumbnail.image_file.url }})" >
+                                        </div>
+                                        <div>
+                                            <h3>{{ workout_exercise.exercise.name }}</h3>
+                                            <p>{{ workout_exercise.set_set.all|length }} sets</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-white bg-primary font-bold rounded-lg text-base px-3 py-2.5 text-center">
+                                Start
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endfor %}
+        </section>
+        <section class="col-span-4 lg:row-span-full lg:col-start-4 lg:col-span-1 bg-secondary dark:bg-neutral-700 rounded py-4 px-6">
+            <h2 class="text-3xl font-bold mb-3">History</h2>
+            <div>
+                {% for session in history %}
+                    <hr>
+                    <div class="flex justify-between items-center font-sans text-neutral-500 dark:text-neutral-300 py-3">
+                        <a href="{% url 'completed_session' session.id %}"
+                           class="cursor-pointer text-black dark:text-white hover:text-primary duration-200">{{ session.workout }}</a>
+                        <p class="text-xs">{{ session.completed_on }}</p>
+                        <a href="{% url 'completed_session' session.id %}">
+                            <i class="fa-solid fa-eye hover:text-black duration-200 cursor-pointer"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endblock content %}

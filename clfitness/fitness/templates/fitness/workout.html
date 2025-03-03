@@ -1,0 +1,113 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <form method="post" action="{% url 'workout' workout.slug %}"
+          class="flex flex-col items-center justify-center my-10 gap-y-10">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% for workout_exercise in workout.workoutexercise_set.all %}
+                    <div class="md:w-3/5 lg:w-2/5 md:min-w-96 min-w-0 w-full rounded overflow-hidden shadow-lg font-sans
+                    dark:bg-neutral-800">
+                        {% if workout_exercise.exercise.thumbnail %}
+                        <div class="max-h-64 overflow-hidden">
+                            <img class="w-full"
+                                 src="{{ workout_exercise.exercise.thumbnail.image_file.url }}"
+                                 alt="{{ workout_exercise.exercise.thumbnail.name }}">
+                        </div>
+                        {% endif %}
+                        <div class="px-6 py-4 flex flex-col gap-y-5">
+                            <div>
+                                <h2 class="font-bold text-2xl">{{ workout_exercise.exercise.name }}</h2>
+                                <div class="flex gap-y-2 mb-2">
+                                    {% for category in workout_exercise.exercise.categories.all  %}
+                                        <p class="bg-primary text-white px-2 py-1 rounded-full text-xs">
+                                            {{ category }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                                <p>{{ workout_exercise.exercise.description }}</p>
+                                <div class="text-neutral-500 dark:text-neutral-300 text-base">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="font-bold">Instructions:</h3>
+                                        <div class="flex items-center justify-center w-8 h-8 text-center text-white
+                                        font-bold rounded-full bg-primary cursor-pointer opacity-50
+                                        hover:opacity-100 focus:opacity-100 duration-500"
+                                        id="expand-instructions-{{ workout_exercise.id }}">
+                                            <i id="expand-{{ workout_exercise.id }}-icon" class="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                    <ol id="instructions-text-{{ workout_exercise.id }}" class="hidden list-decimal ml-5">
+                                        {% for instruction in workout_exercise.exercise.instructions %}
+                                            <li>{{ instruction }}</li>
+                                        {% endfor %}
+                                    </ol>
+                                    <script>
+                                        $('#expand-instructions-{{ workout_exercise.id }}').click(function() {
+                                            $('#instructions-text-{{ workout_exercise.id }}').slideToggle(200)
+                                            $('#expand-{{ workout_exercise.id }}-icon').toggleClass('fa-chevron-down')
+                                            $('#expand-{{ workout_exercise.id }}-icon').toggleClass('fa-chevron-up')
+                                        })
+                                    </script>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="grid grid-cols-5 justify-items-center items-center gap-y-3">
+                                <div class="font-bold text-primary underline">
+                                    Set
+                                </div>
+                                <div class="font-bold text-primary underline">
+                                    Weight
+                                </div>
+                                <div class="font-bold text-primary underline">
+                                    Aim
+                                </div>
+                                <div class="font-bold text-primary underline col-span-2">
+                                    Completed
+                                </div>
+                                {% for set in workout_exercise.set_set.all %}
+                                    <div class="font-bold text-sm">
+                                        <p>{{ set.order }}</p>
+                                    </div>
+                                    <div class="text-sm">
+                                        <p>{{ set.get_weight_level_display }}</p>
+                                    </div>
+                                    <div class="text-sm">
+                                        {% if set.time %}
+                                            <p>{{ set.time }}</p>
+                                        {% elif set.reps %}
+                                            <p>{{ set.reps }} reps</p>
+                                        {% elif set.until_failure %}
+                                            <p>Until Failure</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-span-2 flex flex-col sm:flex-row gap-x-3">
+                                        <label>
+                                            <input type="number" name="{{ workout_exercise.id }}-{{ set.order }}-reps"
+                                                   required placeholder="reps"
+                                                   class="text-sm block w-20 rounded-md border-gray-300 shadow-sm
+                                                   focus:border-primary focus:ring focus:ring-primary
+                                                   focus:ring-opacity-25 dark:bg-neutral-900">
+                                        </label>
+                                        <label>
+                                            <input type="number" name="{{ workout_exercise.id }}-{{ set.order }}-weight"
+                                                   required placeholder="kg"
+                                                   class="text-sm block w-20 rounded-md border-gray-300 shadow-sm
+                                                   focus:border-primary focus:ring focus:ring-primary
+                                                   focus:ring-opacity-25 dark:bg-neutral-900">
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Sorry, no exercises have been assigned to this workout.</p>
+                {% endfor %}
+        <div class="flex gap-x-5">
+            <button type="submit" class="text-white bg-primary font-bold rounded-lg text-lg px-5 py-2.5 text-center
+            hover:brightness-95 focus:ring focus:ring-primary focus:ring-opacity-25">Complete Session</button>
+            <a href="../" class="text-white bg-neutral-500 font-bold rounded-lg text-lg px-5 py-2.5 text-center
+            hover:brightness-95 focus:ring focus:ring-neutral-500 focus:ring-opacity-25">Cancel</a>
+        </div>
+    </form>
+{% endblock content %}

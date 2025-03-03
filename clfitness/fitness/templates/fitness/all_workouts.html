@@ -1,0 +1,66 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <main class="flex flex-col gap-5 my-10 cursor-default">
+        {% for plan in plans %}
+            <section class="grid grid-cols-4 gap-5">
+                {% for workout_assignment in plan.workoutassignment_set.all %}
+                    <a href="{% url 'workout' workout_assignment.workout.slug %}"
+                       class="w-full rounded overflow-hidden shadow-lg font-sans cursor-pointer dark:bg-neutral-800
+                                hover:brightness-90 focus:ring-4 focus:ring-primary focus:ring-opacity-25 duration-200">
+                        {% if workout_assignment.workout.thumbnail %}
+                            <div class="h-64 overflow-hidden">
+                                <img class="w-full"
+                                     src="{{ workout_assignment.workout.thumbnail.image_file.url }}"
+                                     alt="{{ workout_assignment.workout.thumbnail.name }}">
+                            </div>
+                        {% endif %}
+                        <div class="px-6 py-4 flex flex-col gap-y-5">
+                            <div>
+                                <h2 class="font-bold text-2xl mb-2">{{ workout_assignment.workout }}</h2>
+                                <p class="text-neutral-500">{{ workout_assignment.workout.description }}</p>
+                            </div>
+                            <div class="flex flex-nowrap justify-between text-white font-bold">
+                                <div class="col-auto bg-primary w-16 h-16 rounded
+                                flex flex-col justify-center items-center gap-y-1">
+                                    <i class="fa-solid fa-stopwatch"></i>
+                                    <p class="text-xs">{{ workout_assignment.workout.duration }}</p>
+                                </div>
+                                <div class="col-auto bg-primary w-16 h-16 rounded
+                                flex flex-col justify-center items-center gap-y-1">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                    <p class="text-xs">{{ workout_assignment.workout.get_difficulty_display }}</p>
+                                </div>
+                                <div class="col-auto bg-primary w-16 h-16 rounded
+                                flex flex-col justify-center items-center gap-y-1">
+                                    <i class="fa-solid fa-bullseye"></i>
+                                    <p class="text-xs">{{ workout_assignment.workout.categories.first }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex flex-col gap-y-3">
+                                {% for workout_exercise in workout_assignment.workout.workoutexercise_set.all %}
+                                    <div class="flex h-16 text-sm gap-x-5 items-center">
+                                        {% if workout_exercise.exercise.thumbnail %}
+                                            <div class="h-16 w-16 rounded bg-cover bg-center"
+                                                 style="background:
+                                                         url({{ workout_exercise.exercise.thumbnail.image_file.url }})" >
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <h3>{{ workout_exercise.exercise.name }}</h3>
+                                            <p>{{ workout_exercise.set_set.all|length }} sets</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-white bg-primary font-bold rounded-lg text-base px-3 py-2.5 text-center">
+                                Start
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </section>
+        {% endfor %}
+    </main>
+{% endblock content %}

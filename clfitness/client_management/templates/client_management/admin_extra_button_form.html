@@ -1,0 +1,14 @@
+{% extends "admin_extra_buttons/action_page.html" %}
+{% load i18n static admin_list admin_urls %}
+
+{% block action-content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="module aligned" style="display: flex; flex-direction: column; gap: 20px;">
+            {{ form.as_div }}
+        </div>
+        <div class="submit-row">
+            <input type="submit" value="Submit" class="default" />
+        </div>
+    </form>
+{% endblock %}

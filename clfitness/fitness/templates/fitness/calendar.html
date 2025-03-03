@@ -1,0 +1,128 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <div id="event-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-4 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-4xl font-bold" id="modal-title">Event Title</h2>
+                <button class="text-gray-500 hover:text-black" id="close-modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="mt-4 font-sans flex flex-col gap-y-6">
+                <p id="modal-description">Details of the selected event will appear here.</p>
+
+                <div class="flex flex-nowrap justify-around font-bold text-xs">
+                    <div class="col-auto bg-secondary w-16 h-16 rounded flex flex-col justify-center items-center gap-y-1">
+                        <i class="fa-solid fa-stopwatch"></i>
+                        <p id="modal-duration">Duration</p>
+                    </div>
+                    <div class="col-auto bg-secondary w-16 h-16 rounded flex flex-col justify-center items-center gap-y-1">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <p id="modal-difficulty">Difficulty</p>
+                    </div>
+                    <div class="col-auto bg-secondary w-16 h-16 rounded flex flex-col justify-center items-center gap-y-1">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <p id="modal-category">Category</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <a id="modal-link" class="rounded-full p-4 bg-primary text-center font-bold text-white">Go to Workout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex flex-col justify-center gap-y-2 md:mx-auto lg:w-3/4 cursor-default h-full">
+    <section class="flex items-center justify-between">
+        <a href="{% url 'calendar' last_month.year last_month.month %}"
+           class="text-primary hover:text-black duration-200">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <h1 class="text-4xl text-primary font-bold we">{{ this_month|date:"F Y" }}</h1>
+        <a href="{% url 'calendar' next_month.year next_month.month %}"
+           class="text-primary hover:text-black duration-200">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+    </section>
+    <section class="grid grid-cols-7 w-full text-xs md:text-sm mt-4">
+        {% for day in weekdays %}
+            <div class="p-1 md:p-2 text-center border-b uppercase bg-neutral-200">{{ day }}</div>
+        {% endfor %}
+        {% for row in month_itinerary %}
+            {% for day, events in row %}
+                <div class="px-2 text-center border h-16 md:h-32 w-full
+                {% if day == today.day and this_month.month == today.month and this_month.year == today.year %}
+                bg-secondary{% else %}bg-white{% endif %}">
+                {% if day %}
+                    <div class="text-end">
+                        <a>{{ day }}</a>
+                    </div>
+                    {% if events %}
+                        <div class="py-2 whitespace-nowrap w-full">
+                        <ul class="flex md:flex-col gap-1">{% for event in events %}
+                            <li>
+                                <button onclick="showModal('{{ event.workout.name }}',
+                                        '{{ event.workout.description }}',
+                                        '{% url 'workout' event.workout.slug %}',
+                                        '{{ event.workout.duration }}',
+                                        '{{ event.workout.get_difficulty_display }}',
+                                        '{{ event.workout.categories.first }}')"
+                                        class="hidden md:block bg-primary w-full overflow-x-hidden text-start border border-x-8
+                                        border-y-4 border-primary rounded-full text-white font-medium hover:brightness-95
+                                        duration-200 cursor-pointer">
+                                    {{ event.workout.name }}
+                                </button>
+                            </li>
+                            <li class="block md:hidden w-2 h-2 rounded-full bg-primary"></li>
+                        {% endfor %}</ul>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </section>
+    </main>
+
+    <script>
+        function showModal(eventName, eventDescription, eventURL, eventDuration = null, eventDifficulty = null,
+                           eventCategory = null) {
+            // Get the modal element
+            const modal = document.getElementById('event-modal');
+
+            // Get modal content elements
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            const modalDuration = document.getElementById('modal-duration');
+            const modalDifficulty = document.getElementById('modal-difficulty');
+            const modalCategory = document.getElementById('modal-category');
+            const modalLink = document.getElementById('modal-link');
+
+            // Set the content dynamically based on the item clicked
+            modalTitle.textContent = eventName;  // Set the item name as the title
+            modalDescription.textContent = eventDescription;
+            modalDuration.textContent = eventDuration;
+            modalDifficulty.textContent = eventDifficulty;
+            modalCategory.textContent = eventCategory;
+            modalLink.href = eventURL;
+
+            // Show the modal
+            modal.classList.remove('hidden');
+        }
+
+        // Close modal when clicking on the close button
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('event-modal').classList.add('hidden');
+        });
+
+        // Optional: Close modal when clicking outside the modal content
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('event-modal');
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
+{% endblock content %}

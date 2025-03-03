@@ -1,0 +1,23 @@
+{% load static tailwind_tags %}
+
+{% load static %}
+<script src="{% static 'js/navigation-sidebar.js' %}"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <title>Chloe Leanne Fitness</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+	</head>
+	<body class="bg-neutral-50 dark:bg-neutral-900 dark:text-white font-serif leading-normal tracking-normal my-auto
+	cursor-default min-h-screen flex">
+        {% block body %}
+        {% endblock %}
+	</body>
+</html>

@@ -1,10 +1,18 @@
-# created by virtualenv automatically
 bin/
 lib/
 lib64
 pyvenv.cfg
+.idea/*
+
+**/__pycache__/*
+.pytest_cache
+
+.coverage
+coverage_re
+clfitness/coverage_re
 
 clfitness/db.sqlite3
 clfitness/stderr.log
 clfitness/public
+clfitness/clfitness/public/media/thumbnails
 clfitness/clfitness/.env

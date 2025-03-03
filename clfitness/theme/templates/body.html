@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <aside id="navigation-sidebar" class="h-screen w-screen lg:w-1/6 bg-primary absolute lg:static z-50 hidden lg:flex flex-col py-5 px-5 gap-y-5 font-sans text-white">
+        <section class="relative h-16 flex flex-col justify-center items-center">
+            <a href="{% url 'index' %}" class="h-full">
+                <img class="h-full brightness-100 hover:brightness-0
+                duration-200 object-contain" src="/media/logo_white.png" alt="CLF Logo">
+            </a>
+            <button id="hide-navigation-bar-button" class="absolute right-0 top-0">
+                <i class="fa-solid fa-lg fa-xmark"></i>
+            </button>
+        </section>
+
+        <section class="flex flex-col gap-y-5">
+            <hr class="opacity-25" />
+
+            <a href="{% url 'dashboard' %}" title="Dashboard" class="flex items-center gap-x-3">
+                <i class="fa-solid fa-rocket fa-fw hover:text-white dark:hover:text-black duration-200"></i>
+                <p>Dashboard</p>
+            </a>
+        </section>
+
+        {% if request.user.client %}
+
+            <section class="flex flex-col gap-y-5">
+                <hr class="opacity-25" />
+
+                <h2 class="uppercase text-sm">Fitness</h2>
+
+                <a href="{% url 'all_workouts' %}" title="All Workouts" class="flex items-center gap-x-3">
+                    <i class="fa-solid fa-dumbbell fa-fw hover:text-white dark:hover:text-black duration-200 w-10"></i>
+                    <p>All Workouts</p>
+                </a>
+
+                <a href="{% url 'default_calendar' %}" title="Your Account" class="flex items-center gap-x-3">
+                    <i class="fa-solid fa-calendar-days fa-fw hover:text-white dark:hover:text-black duration-200"></i>
+                    <p>Workout Calendar</p>
+                </a>
+
+                <a href="{% url 'completed_chart' %}" title="Progress" class="flex items-center gap-x-3">
+                    <i class="fa-solid fa-chart-line fa-fw hover:text-white dark:hover:text-black duration-200"></i>
+                    <p>Progress</p>
+                </a>
+            </section>
+
+        {% endif %}
+
+        <section class="flex flex-col gap-y-5">
+            <hr class="opacity-25" />
+
+            <h2 class="uppercase text-sm">Settings</h2>
+
+            <a href="{% url 'account' %}" title="Your Account" class="flex items-center gap-x-3">
+                <i class="fa-solid fa-circle-user fa-fw hover:text-white dark:hover:text-black duration-200"></i>
+                <p>Your Account</p>
+            </a>
+        </section>
+
+        <section class="flex flex-col gap-y-5">
+            <hr class="opacity-25" />
+
+            <a href="https://www.chloeleannefitness.com" title="Admin Site" class="flex items-center justify-center gap-x-3 p-2
+            bg-black hover:bg-neutral-800 duration-200 rounded-md">
+                <i class="fa-solid fa-globe fa-fw"></i>
+                <p>Return to Brand Site</p>
+            </a>
+
+            {% if request.user.is_staff %}
+            <a href="{% url 'admin:index' %}" title="Admin Site" class="flex items-center justify-center gap-x-3 p-2
+             bg-red-600 hover:bg-red-700 duration-200 rounded-md">
+                <i class="fa-solid fa-hammer fa-fw"></i>
+                <p>Enter Admin</p>
+            </a>
+            {% endif %}
+        </section>
+    </aside>
+
+    <main class="w-full flex flex-col min-h-dvh">
+        <header class="px-16 py-5 cursor-default relative flex justify-center text-center">
+            <button id="show-navigation-bar-button" class="absolute left-5 bottom-1/2 lg:hidden">
+                <i class="fa-solid fa-lg fa-bars"></i>
+            </button>
+            <h1 class="text-3xl font-semibold">{{ title }}</h1>
+        </header>
+        <hr class="dark:opacity-10">
+        <main class="mx-4 md:mx-10 flex-1">
+            {% block content %}
+            {% endblock content %}
+        </main>
+    </main>
+{% endblock %}
